@@ -1,0 +1,516 @@
+{% extends 'includes/demo3.html' %}
+{% load static %}
+{% load  custom_tags %}
+{% block head %}
+{#         <link href="{% static 'bootstrap-3.3.7/css/main.css' %}" rel="stylesheet">#}
+    <style>
+*{ margin:0; padding:0;}
+body{font-size:14px; padding:50px;}
+
+
+.grip{width:20px;height:30px;margin-top:-3px;margin-left:-5px;position:relative;z-index:88;cursor:e-resize;}
+.grip:hover{background-position-x:-20px;}
+.dragging .grip{background-position-x:-40px;}
+
+.dotted{background-repeat:repeat-y;}
+
+#sample2Txt{float:right;}
+label{color:#0361ae;}
+/*{#label{color:#0361ae;}#}*/
+/*{##sample2 th:nth-child(2){color:Red !important;display:none;}#}*/
+/*{##sample2 td:nth-child(2){color:Red !important;display:none;}#}*/
+/*{##sample2 th:nth-child(3){color:Red !important;display:none;}#}*/
+/*{##sample2 td:nth-child(3){color:Red !important;display:none;}#}*/
+
+</style>
+    <script src="{% static 'bootstrap-3.3.7/js/jquery-1.8.3.min.js' %}"></script>
+    <script	src="{% static 'bootstrap-3.3.7/js/colResizable-1.5.min.js' %}"></script>
+<!--{#        <script src="{% static 'bootstrap-3.3.7/js/jquery.js' %}"></script>#}-->
+
+
+
+
+{% endblock %}
+{% block body %}
+
+
+
+
+<div class="search">
+                <form method="get" action="." id="searchform" autocomplete="off" name="{{ search_val }}">
+                    <div class="search_form">
+                        <table style="margin-left:20%">
+                            <tr>
+                                <td style="width:10%; padding-left: 10px;" >
+<!--{#                                    <label for="database" class="offscreen_noflow"></label>#}-->
+                                     <select id="choice" name="search_kinds"  class="form-control"  >
+                                     <option  name=all>all</option>
+									 {% for i in search_option %}
+                                        <option  name={{ i.remark_name }}>{{ i.name }}</option>
+                                    {% endfor %}
+<!--{#			<option value={{ search_option.value }} name={{ search_option.remark_name }}>{{ search_option.name }}</option>#}-->
+									</select>
+
+                                </td>
+                                <td width="60%" style="padding-left: 10px;">
+                                    <div class="nowrap">
+                                        <label for="term" class="offscreen_noflow" accesskey="/"></label>
+                                        <div class="nowrap">
+                                            <div class="jig-ncbiclearbutton-wrap ui-ncbiclearbutton-wrap">
+                                                <input
+                                                    type="text"
+                                                    name="q" id="id_q"
+                                                    value=""
+                                                    class="jig-ncbiclearbutton jig-ncbiautocomplete form-control"
+                                                    data-jigconfig="isEnabled:false,disableUrl:'NcbiSearchBarAutoComplCtrl'"
+                                                    autocomplete="off"
+                                                    data-sbconfig="ds:'no',pjs:'no',afs:'yes'"
+                                                    aria-haspopup="true"
+                                                    aria-autocomplete="list"
+                                                    role="textbox"><a
+                                                    class="reset" href="#" style="visibility: hidden;"><img
+                                                    src="/dist/images/clear.png" alt="Clear input"></a></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width: 20% ;padding-left: 10px;">
+                                    <div class="nowrap">
+                                        <input type="submit" value="Search" class="form-control btn-primary" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    </form>
+
+
+
+                    {% if query %}
+                        {%  if first_result_count    %}
+                               <h3  align="left" style="color:  #2131bb">{{ first_result_count }}</h3>
+                        {% endif %}
+                        {% if  page.object_list %}
+
+<!--{#                        <h3>搜索结果如下：</h3>#}-->
+<!--{#                            <form action="{% url 'down_url' %}" >#}-->
+                            <form action="{% url 'down_url' %}" method="post">
+
+                            <div align="right" >
+                                <button type="submit" class="btn btn-lg btn-primary" >下载</button>
+                            </div>
+
+
+                      <div  style="overflow:auto; width:4000px;">
+                      <table    id="sample2"    border="4"   style="color: #25010e">
+                        <thead>
+                            <tr >
+                                <th   style="text-align:left; vertical-align:middle; ">
+
+                                    <input  value='down_all'  type="radio" id="down_all">
+                                    excel<br \>
+                                    <input  value="reset_all" type="radio" id="reset_all">
+                                    取消
+                                    <br \>
+
+
+                                </th>
+
+                                {%   for obj in  fileds_na %}
+                                {% for ii,jj in obj.items %}
+
+                                    <th style="text-align:center; vertical-align:middle; ">{{ jj  }}</th>
+
+                                {% endfor %}
+                                {% endfor %}
+                                 <th  style="text-align:center; vertical-align:middle; ">
+                                    详情页
+                                </th>
+
+                                 <th  style="text-align:left; vertical-align:middle; ">
+
+                                    <input  value='pics'  type="radio" id="pics">
+                                     图片<br \>
+
+                                    <input  value='rest_pics'  type="radio" id="rest_pics">
+                                     取消<br \>
+                                </th>
+<!--{#                                <th  style="text-align:left; vertical-align:middle; ">#}-->
+<!--{##}-->
+<!--{##}-->
+<!--{#                                    <input  value='xu1s'  type="radio" id="xu1s">#}-->
+<!--{#                                    序列1<br \>#}-->
+<!--{##}-->
+<!--{#                                    <input  value='rest_xu1s'  type="radio" id="rest_xu1s">#}-->
+<!--{#                                    取消<br \>#}-->
+<!--{#                                </th>#}-->
+<!--{#                                 <th  style="text-align:left; vertical-align:middle; ">#}-->
+<!--{##}-->
+<!--{#                                    <input  value='xu2s'  type="radio" id="xu2s">#}-->
+<!--{#                                     序列2<br \>#}-->
+<!--{##}-->
+<!--{#                                    <input  value='rest_xu2s'  type="radio" id="rest_xu2s">#}-->
+<!--{#                                     取消<br \>#}-->
+<!--{#                                </th>#}-->
+<!--{#                                 <th  style="text-align:left; vertical-align:middle; ">#}-->
+<!--{##}-->
+<!--{#                                    <input  value='xu3s'  type="radio" id="xu3s">#}-->
+<!--{#                                     序列3<br \>#}-->
+<!--{##}-->
+<!--{#                                    <input  value='rest_xu3s'  type="radio" id="rest_xu3s">#}-->
+<!--{#                                     取消<br \>#}-->
+<!--{#                                 </th>#}-->
+
+                                     <th  style="text-align:left; vertical-align:middle; ">
+                                     <input  value='COI'  type="radio" id="COI">
+                                     COI<br \>
+
+                                    <input  value='rest_COI'  type="radio" id="rest_COI">
+                                     取消<br \>
+                                    </th>
+
+                                  <th  style="text-align:left; vertical-align:middle; ">
+                                     <input  value='COI'  type="radio" id="COI-2">
+                                     COI-2<br \>
+
+                                    <input  value='rest_COI-2'  type="radio" id="rest_COI-2">
+                                     取消<br \>
+                                    </th>
+
+                                    <th style="text-align:left; vertical-align:middle; ">
+
+                                    <!--这边添加一些其他的zip包，先写死    -->
+                                    <input  value='COIII'  type=radio id='COIII'>
+                                     COIII<br \>
+
+                                    <input  value='rest_COIII'  type=radio id='rest_COIII'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='12S'  type=radio id='12S'>
+                                     12S<br \>
+
+                                    <input  value='rest_12S'  type=radio id='rest_12S'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='16S'  type=radio id='16S'>
+                                     16S<br \>
+
+                                    <input  value='rest_16S'  type=radio id='rest_16S'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='18S'  type=radio id='18S'>
+                                     18S<br \>
+
+                                    <input  value='rest_18S'  type=radio id='rest_18S'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='28S'  type=radio id='28S'>
+                                     28S<br \>
+
+                                    <input  value='rest_28S'  type=radio id='rest_28S'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='H3'  type=radio id='H3'>
+                                     H3<br \>
+
+                                    <input  value='rest_H3'  type=radio id='rest_H3'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='WNT'  type=radio id='WNT'>
+                                     WNT<br \>
+
+                                    <input  value='rest_WNT'  type=radio id='rest_WNT'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='L494'  type=radio id='L494'>
+                                     L494<br \>
+
+                                    <input  value='rest_L494'  type=radio id='rest_L494'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='L168'  type=radio id='L168'>
+                                     L168<br \>
+
+                                    <input  value='rest_L168'  type=radio id='rest_L168'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='ND1'  type=radio id='ND1'>
+                                     ND1<br \>
+
+                                    <input  value='rest_ND1'  type=radio id='rest_ND1'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='Actin5c'  type=radio id='Actin5c'>
+                                     Actin5c<br \>
+
+                                    <input  value='rest_Actin5c'  type=radio id='rest_Actin5c'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='12-16S'  type=radio id='12-16S'>
+                                     12-16S<br \>
+
+                                    <input  value='rest_12-16S'  type=radio id='rest_12-16S'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='EF1a'  type=radio id='EF1a'>
+                                     EF1a<br \>
+
+                                    <input  value='rest_EF1a'  type=radio id='rest_EF1a'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='AK'  type=radio id='AK'>
+                                     AK<br \>
+
+                                    <input  value='rest_AK'  type=radio id='rest_AK'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='GAPDH'  type=radio id='GAPDH'>
+                                     GAPDH<br \>
+
+                                    <input  value='rest_GAPDH'  type=radio id='rest_GAPDH'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='Nak'  type=radio id='Nak'>
+                                     Nak<br \>
+
+                                    <input  value='rest_Nak'  type=radio id='rest_Nak'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='PEPCK'  type=radio id='PEPCK'>
+                                     PEPCK<br \>
+
+                                    <input  value='rest_PEPCK'  type=radio id='rest_PEPCK'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='PDI'  type=radio id='PDI'>
+                                     PDI<br \>
+
+                                    <input  value='rest_PDI'  type=radio id='rest_PDI'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='HSP'  type=radio id='HSP'>
+                                     HSP<br \>
+
+                                    <input  value='rest_HSP'  type=radio id='rest_HSP'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='转录组'  type=radio id='转录组'>
+                                     转录组<br \>
+
+                                    <input  value='rest_转录组'  type=radio id='rest_转录组'>
+                                     取消<br \>
+                                    </th>
+<th  style='text-align:left; vertical-align:middle; '>
+                                     <input  value='张鹏'  type=radio id='张鹏'>
+                                    张鹏<br \>
+
+                                    <input  value='rest_张鹏'  type=radio id='rest_张鹏'>
+                                     取消<br \>
+                                    </th>
+
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for result in page.object_list %}
+                            <tr>
+                                {%   find_content result.object.row_num result.object.sheet_name result.object.excel_name_id  %}
+                            </tr>
+                        {% endfor %}
+
+<!--{#                        <script>#}-->
+<!--{#                        $(function(){#}-->
+<!--{#	                    var onSampleResized = function(e){#}-->
+<!--{#	                        var columns = $(e.currentTarget).find("th");#}-->
+<!--{##}-->
+<!--{#		                    columns.each(function(){ msg += $(this).width() + "px; "; })#}-->
+<!--{#                        };#}-->
+<!--{#	                    $("#sample2").colResizable({#}-->
+<!--{#		                liveDrag:true,#}-->
+<!--{#		                gripInnerHtml:"<div class='grip'></div>",#}-->
+<!--{#		                draggingClass:"dragging",#}-->
+<!--{#		                onResize:onSampleResized#}-->
+<!--{#	                    });#}-->
+<!--{#                        });#}-->
+<!--{#                        </script>#}-->
+
+                        <script>
+
+                        $("#down_all").click(function(){
+                        $("tr :checkbox").attr("checked",true);
+
+
+                            if ($("tr :checkbox").prop("checked") == true) {
+                                $("tr :checkbox").parent().parent().css("background", "#99cc99");
+                            }
+
+
+
+                        });
+                        $("#reset_all").click(function(){
+                        $("tr :checkbox").attr("checked",false);
+
+
+                                //获取checkbox选中项
+                            if ($("tr :checkbox").prop("checked") == false) {
+                                $("tr :checkbox").parent().parent().css("background", "");
+                            }
+
+
+
+                        });
+
+
+
+                         //写死
+                        $("#pics").click(function(){
+                        $("strong :checkbox").attr("checked",true);
+//                        $("#图片:checkbox").attr("checked",true);
+
+                        });
+                        $("#rest_pics").click(function(){
+                        $("strong :checkbox").attr("checked",false);
+//                         $("#图片:checkbox").attr("checked",false);
+                        });
+
+                        $("#xu1s").click(function(){
+                        $("i :checkbox").attr("checked",true);
+                        });
+                        $("#rest_xu1s").click(function(){
+                        $("i :checkbox").attr("checked",false);
+                        });
+
+                        $("#xu2s").click(function(){
+                        $("sub :checkbox").attr("checked",true);
+                        });
+                        $("#rest_xu2s").click(function(){
+                        $("sub :checkbox").attr("checked",false);
+                        });
+
+                        $("#xu3s").click(function(){
+                        $("sup :checkbox").attr("checked",true);
+                        });
+                        $("#rest_xu3s").click(function(){
+                        $("sup :checkbox").attr("checked",false);
+                        });
+
+                        $("#COI").click(function(){
+                        $("li :checkbox").attr("checked",true);
+                        });
+                        $("#rest_COI").click(function(){
+                        $("li :checkbox").attr("checked",false);
+                        });
+$("#COI-2").click(function(){$("dl :checkbox").attr("checked", true);});$("#rest_COI-2").click(function(){$("dl :checkbox").attr("checked", false);});
+$("#COIII").click(function(){$("dt :checkbox").attr("checked", true);});$("#rest_COIII").click(function(){$("dt :checkbox").attr("checked", false);});
+$("#12S").click(function(){$("dd :checkbox").attr("checked", true);});$("#rest_12S").click(function(){$("dd :checkbox").attr("checked", false);});
+$("#16S").click(function(){$("p :checkbox").attr("checked", true);});$("#rest_16S").click(function(){$("p :checkbox").attr("checked", false);});
+$("#18S").click(function(){$("ul :checkbox").attr("checked", true);});$("#rest_18S").click(function(){$("ul :checkbox").attr("checked", false);});
+$("#28S").click(function(){$("ol :checkbox").attr("checked", true);});$("#rest_28S").click(function(){$("ol :checkbox").attr("checked", false);});
+$("#H3").click(function(){$("label :checkbox").attr("checked", true);});$("#rest_H3").click(function(){$("label :checkbox").attr("checked", false);});
+$("#WNT").click(function(){$("datalist :checkbox").attr("checked", true);});$("#rest_WNT").click(function(){$("datalist :checkbox").attr("checked", false);});
+$("#L494").click(function(){$("option :checkbox").attr("checked", true);});$("#rest_L494").click(function(){$("option :checkbox").attr("checked", false);});
+$("#L168").click(function(){$("summary :checkbox").attr("checked", true);});$("#rest_L168").click(function(){$("summary :checkbox").attr("checked", false);});
+$("#ND1").click(function(){$("select :checkbox").attr("checked", true);});$("#rest_ND1").click(function(){$("select :checkbox").attr("checked", false);});
+$("#Actin5c").click(function(){$("optgroup :checkbox").attr("checked", true);});$("#rest_Actin5c").click(function(){$("optgroup :checkbox").attr("checked", false);});
+$("#12-16S").click(function(){$("textarea :checkbox").attr("checked", true);});$("#rest_12-16S").click(function(){$("textarea :checkbox").attr("checked", false);});
+$("#EF1a").click(function(){$("video :checkbox").attr("checked", true);});$("#rest_EF1a").click(function(){$("video :checkbox").attr("checked", false);});
+$("#AK").click(function(){$("source :checkbox").attr("checked", true);});$("#rest_AK").click(function(){$("source :checkbox").attr("checked", false);});
+$("#GAPDH").click(function(){$("caption :checkbox").attr("checked", true);});$("#rest_GAPDH").click(function(){$("caption :checkbox").attr("checked", false);});
+$("#Nak").click(function(){$("meta :checkbox").attr("checked", true);});$("#rest_Nak").click(function(){$("meta :checkbox").attr("checked", false);});
+$("#PEPCK").click(function(){$("b :checkbox").attr("checked", true);});$("#rest_PEPCK").click(function(){$("b :checkbox").attr("checked", false);});
+$("#PDI").click(function(){$("pre :checkbox").attr("checked", true);});$("#rest_PDI").click(function(){$("pre :checkbox").attr("checked", false);});
+$("#HSP").click(function(){$("title :checkbox").attr("checked", true);});$("#rest_HSP").click(function(){$("title :checkbox").attr("checked", false);});
+$("#转录组").click(function(){$("dir :checkbox").attr("checked", true);});$("#rest_转录组").click(function(){$("dir :checkbox").attr("checked", false);});
+$("#张鹏").click(function(){$("menu :checkbox").attr("checked", true);});$("#rest_张鹏").click(function(){$("menu :checkbox").attr("checked", false);});
+
+
+
+
+
+
+
+                            $(function () {
+                            //input 单击事件
+                            $("input").click(function () {
+                                //获取checkbox选中项
+                            if ($(this).prop("checked") == true) {
+                                $(this).parent().parent().css("background", "#99cc99");
+                            } else {
+                                $(this).parent().parent().css("background", "");
+                            }
+                            });
+
+                            })
+
+
+
+                        </script>
+
+                        <!--//动态的加js-->
+<!--{#                        <script>#}-->
+<!--{#                            {{  js_css  }}#}-->
+<!--{#                        </script>#}-->
+
+
+                        </tbody>
+
+                        </table>
+
+                      </div>
+
+                            {% if empty %}
+                                <p>不好意思，没有您要搜寻的内容</p>
+                            {% endif %}
+
+{#                {% endif %}#}
+
+
+                        {% if page.has_previous or page.has_next %}
+                            <div>
+                                {% if page.has_previous %}
+
+                                    <a href="?search_kinds={{  seach_k }}&q={{ query }}&page={{ page.previous_page_number }}">
+                                {% endif %}
+                                    «上一页
+                                {% if page.has_previous %}</a>
+                                {% endif %}
+                                |
+                                {% if page.has_next %}
+                                    <a href="?search_kinds={{  seach_k }}&q={{ query }}&page={{ page.next_page_number }}">
+                                {% endif %}
+                                    下一页 »
+                                {% if page.has_next %}</a>
+                                {% endif %}
+                                </div>
+
+                        {% endif %}
+                {% endif %}
+                {% endif %}
+
+    </form>
+    </form>
+            </div>
+            </form>
+    </div>
+{% endblock %}

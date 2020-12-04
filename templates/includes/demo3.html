@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+      <title>测试</title>
+        {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7/css/pc3.css' %}">
+    <link href="{% static 'bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet">
+                <script src="{% static 'bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+                <script src="{% static 'jquery-1.12.4/jquery-1.12.4.min.js' %}"></script>
+<!--{#<script src="{% static 'bootstrap-3.3.7/js/jquery.js' %}#}-->
+    {% block head %}{% endblock %}
+</head>
+<body>
+<!--//{#<style type="text/css">#}-->
+<!--{#body{background:url("{% static "imgs/timg.jpg" %}") ;}#}-->
+<!--{#</style>#}-->
+<div id="nav" >
+    <ul>
+        <li>
+            <a href="{% url 'logout' %}">
+                登录/退出
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'upload' %}">
+               上传
+            </a>
+        </li>
+<li>
+            <a href="/admin">
+               后台管理
+            </a>
+        </li>
+<li>
+            <a href="/admin">
+               后台管理
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'search' %}">
+                首页
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+    <br \>
+    <br \>
+    <br \>
+    <br \>
+    <br \>
+    <br \>
+<div id="logo">
+    <div class="logo">
+ <img class="logo" src="{% static 'imgs/logo2.jpg' %}" alt="图标">
+    </div>
+</div>
+<br \>
+<br \>
+<br \>
+                    {% block body %}{% endblock %}
+<div id="margin3">
+    <span>
+{#        <a target="_blank" href="#">#}
+           <h2 class="img_logo"  style="color: #2131bb; font-family:'微软雅黑';">测试</h2>
+{#        </a>#}
+
+    </span>
+</div>
+<div class="col-md-10">
+                                {% if errstr %}
+                                    <div class="" style="text-align: center">{{ errstr }}</div>
+
+                                {% endif %}
+
+ </div>
+
+
+
+<a id="backToTop" href="javascript:void(0);">返回到顶部</a><div id="handWrite" class="pm" style="display:none"><object width="346" height="216" type="application/x-shockwave-flash" id="hnw" data="https://shared.ydstatic.com/dict/v5.16/swf/Hnw.swf"><param name="movie" value="${DictStaticBase}swf/Hnw.swf"><param name="menu" value="false"><param name="allowScriptAccess" value="always"></object></div><div id="callback"></div>
+{#<script src="https://shared.ydstatic.com/js/jquery/jquery-1.12.3.min.js"></script>#}
+{#<script src="{% static 'jquery-1.12.4/jquery.mousewheel.js' %}"></script>#}
+{#<script src="{% static 'jquery-1.12.4/jquery.placeholder.js' %}"></script>#}
+{#<script src="{% static 'jquery-1.12.4/autocomplete_json.js' %}"></script>#}
+{#<script src="{% static 'jquery-1.12.4/pc2.js' %}"></script>#}
+{#<script defer="defer" src="{% static 'jquery-1.12.4/v1.js' %}"></script>#}
+</body>
+</html>

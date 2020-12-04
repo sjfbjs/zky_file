@@ -1,0 +1,130 @@
+
+<!DOCTYPE html><html lang=zh-CN><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <title>
+    Dashboard
+    </title>
+    <meta name=description content=""><meta name=keywords content=""><meta name=author content=Bootstrap中文网>
+    <meta name=founder content=王赛><link href=https://cdn.bootcss.com rel=dns-prefetch>
+    <link href=https://api.bootcdn.cn rel=dns-prefetch><link href=https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css rel=stylesheet>
+    <link href=https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css rel=stylesheet>
+    <link href="http://www.bootcdn.cn/assets/css/site.min.css?1520402635345" rel=stylesheet><!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]--><!--[if IE 9]>
+    <script src="https://cdn.bootcss.com/geopattern/1.2.3/js/base64.min.js"></script>
+    <script src="https://cdn.bootcss.com/geopattern/1.2.3/js/typedarray.min.js"></script>
+  <![endif]--><link rel=apple-touch-icon-precomposed sizes=144x144 href="http://www.bootcdn.cn/assets/ico/apple-touch-icon-144-precomposed.png?1520402635345">
+    <link rel="shortcut icon" href="http://www.bootcdn.cn/assets/ico/favicon.ico?1520402635345"><script>var build = 1520402635345;</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?24aff315392dc2c9b2805cfa4d8e101a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+
+})();</script>
+
+  {% block head %}{% endblock %}
+</head>
+
+
+<body class=home-template>
+<header class=site-header>
+<nav class="navbar navbar-static-top main-navbar" id=top><div class=container>
+<div class=navbar-header>
+<button class="navbar-toggle collapsed" type=button data-toggle=collapse data-target=#bs-navbar aria-controls=bs-navbar aria-expanded=false>
+<span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> 
+<span class=icon-bar></span> <span class=icon-bar>
+</span>
+</button>
+
+
+ </div>
+ <nav id=bs-navbar class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right">
+     <li>
+   <a href="/admin" onclick="" target=_blank>
+ 首页
+ </a>
+         </li>
+     <li>
+     <a href="/admin" onclick="" target=_blank>
+ 文件管理中心
+ </a>
+</li>
+ <li>
+ <a href="/logout" onclick="">
+     退出登录
+ </a>
+ </li>
+ </ul>
+ </nav>
+ </div>
+ </nav>
+ <div class="container jumbotron">
+ <div class=row>
+ <div class=col-xs-12>
+ <h1>搜索平台
+ <img src="http://www.bootcdn.cn/assets/img/bootcdn.png" alt="BootCDN logo" class=hidden>
+ </h1>
+
+ <div class=search-wraper role=search>
+ <div class=form-group>
+ <input class="form-control search clearable" placeholder=搜索关键字 autocomplete=off autofocus tabindex=0 autocorrect=off autocapitalize=off spellcheck=false>
+ <i class="fa fa-search">
+ </i>
+
+
+
+ </div>
+ </div>
+ </div>
+
+ </div>
+ </div>
+
+
+
+ <div class="mostused-packages well well-sm text-center hidden-xs hidden-sm">
+ <ul class=list-inline>
+
+
+
+
+
+ <div class=row><div class=col-xs-12>
+ </div>
+ <div class=container>
+     <div class="list-group packages" id=common-packages>
+
+ </div>
+     </a>
+     <a href="" target=_blank onclick="">搜索历史记录</a>
+ </div>
+<div class="list-group packages" id=search-results style="display: none">
+
+</div>
+ </div>
+</main><footer id=footer class="footer hidden-print">
+<div class=container><div class=row><div class="footer-about col-md-6 col-sm-12" id=about><h4></h4><p></p><p></p>
+</div>
+</div>
+</div>
+ </footer>
+ </ul>
+
+
+<a href=# id=back-to-top><i class="fa fa-angle-up"></i></a>
+<script src=https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js></script>
+<script src=https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js></script>
+<script src=https://cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js></script>
+<script src=https://cdn.bootcss.com/clipboard.js/1.5.16/clipboard.min.js></script>
+<script src=https://cdn.bootcss.com/localforage/1.4.2/localforage.min.js></script>
+<script src=https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js></script>
+<script src=http://www.bootcdn.cn/assets/js/site.min.js?1520402635345></script>
+ </div>
+</header>
+   {% block body  %}{% endblock %}
+{#{% block body %}{% endblock %}#}
+</body>
+
+</html>

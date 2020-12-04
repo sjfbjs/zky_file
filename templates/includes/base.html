@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>文件管理平台</title>
+        {% load static %}
+        <link href="{% static 'bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet">
+        <script src="{% static 'jquery-1.12.4/jquery-1.12.4.min.js' %}"></script>
+        <script src="{% static 'bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+        <style>
+        #top {
+            position: fixed;
+            right: 16px;
+            bottom: 20px;
+            display: none;
+            opacity: 0.5;
+        }
+        </style>
+        <script>
+        $(function () {
+            $('.form-date').each(function () {
+                var color = $(this).css('background-color');
+                $(this)
+                    .attr('readonly', true)
+                    .css('background-color', color)
+                    .datetimepicker({
+                        format: 'yyyy-mm-dd',
+                        autoclose: 1,
+                        minView: 2
+                    });
+            });
+            $('#top').click(function () {
+                $('body,html').animate({scrollTop: 0}, 500);
+            });
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 0) {
+                    $('#top').css('display', 'block');
+                } else {
+                    $('#top').css('display', 'none');
+                }
+            });
+        });
+        </script>
+
+
+        {% block head %}{% endblock %}
+    </head>
+
+    <body>
+        <br>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="form-group pull-right">
+                    <ul class="list-group">
+{#                        <li class="list-group-item"><a href="/search">搜索文件</a></li>#}
+                        <li class="list-group-item" ><a href="/admin"><h4>ADMIN</h4></a></li>
+                        <li class="list-group-item" ><a href="{% url 'logout' %}" >LOGOUT</a></li>
+                    </ul>
+{#                    <a href="{% url 'logout' %}">  退出登录</a>#}
+                </div>
+
+
+
+
+
+
+{#  <div class="navbar">#}
+{#  <div class="navbar-inner">#}
+{#    <a class="brand" href="#">文件管理平台</a>#}
+{#    <ul class="nav">#}
+{#     <li ><a href="/upload">上传文件</a></li><li><a href="/search">搜索文件</a></li>#}
+{#    </ul>#}
+{#  </div>#}
+{#</div>#}
+
+
+{#<ul class="nav nav-tabs">#}
+{#  <li class="active">#}
+{#    <a href="#"><h4>文件管理平台</h4></a>#}
+{#  </li>#}
+{#    <li ><a href="/upload"><h4>上传文件</h4></a></li>#}
+{#    <li><a href="/search"><h4>搜索文件</h4></a></li>#}
+{#    <li><a href="/admin"><h4>文件上传管理平台</h4></a></li>#}
+{#</ul>#}
+
+
+{#  <li><a href="#">...</a></li>#}
+
+                <div class="col-md-10">
+
+                    {% block body %}{% endblock %}
+
+                </div>
+                                {% if errstr %}
+                                    <div class="" style="text-align: center">{{ errstr }}</div>
+
+                                {% endif %}
+
+            </div>
+        </div>
+        <button class="btn btn-primary" type="button" data-toggle="tooltip" title="Back to top" id="top">
+            <span class="glyphicon glyphicon-arrow-up"></span>
+        </button>
+    </body>
+</html>

@@ -1,0 +1,1 @@
+INSERT INTO "zky"."index_field" ("id", "field_name", "field_val") VALUES (1, 'all', 'all');

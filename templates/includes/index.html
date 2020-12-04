@@ -1,0 +1,108 @@
+{% extends 'includes/base.html' %}
+
+{% block body %}
+
+{#    <form class="form-inline" role="form" action="/search/" method="post">#}
+{#      <div class="form-group pull-middle">#}
+{#          <div class="form-group">#}
+{#        <label for="search_category">选择搜索类别:</label>#}
+{#        <select class="form-control" id="search_category" name="search_kinds" value="标本编号">#}
+{#                <option value="REMARKS">标本编号</option>#}
+{#                <option value="DNAS">DNA</option>#}
+{#                <option value="NUMBERS">数量</option>#}
+{#                <option value="KIND_NAMES">种名</option>#}
+{#                <option value="PROVINCES">省</option>#}
+{#                <option value="SEARCH_PLAYS">采集地</option>#}
+{#                <option value="DUS">经纬度</option>#}
+{#                <option value="SEA_HEIGHTS">海拔</option>#}
+{#                <option value="SEARCH_PEOPLES">采集人</option>#}
+{#                <option value="TIMES">时间</option>#}
+{#        </select>#}
+{#        <input type="text"    value="关键字" name="seach_fields"  autofocus />#}
+{#              <input type="submit" value="搜索" />#}
+{#        <button class="btn btn-primary" type="submit">搜索</button>#}
+{#      </div>#}
+{#      </div>#}
+{#    </form>#}
+
+
+{#    <h2>Search</h2>#}
+{##}
+{#    <form class="form-inline" role="form"   method="get" action=".">#}
+{#        <table>#}
+{#            {{ form.as_table }}#}
+{#            <div class="form-group ">#}
+{#          <div class="form-group pull-left">#}
+{#        <label for="search_category">选择搜索类别:</label>#}
+{#        <select class="form-control" id="search_category" name="search_kinds" value="标本编号">#}
+{#                <option value="REMARKS">标本编号</option>#}
+{#                <option value="DNAS">DNA</option>#}
+{#                <option value="NUMBERS">数量</option>#}
+{#                <option value="KIND_NAMES">种名</option>#}
+{#                <option value="PROVINCES">省</option>#}
+{#                <option value="SEARCH_PLAYS">采集地</option>#}
+{#                <option value="DUS">经纬度</option>#}
+{#                <option value="SEA_HEIGHTS">海拔</option>#}
+{#                <option value="SEARCH_PEOPLES">采集人</option>#}
+{#                <option value="TIMES">时间</option>#}
+{#        </select>#}
+{##}
+{#         <input type="text"    value="关键字" name="search_fields"  autofocus />#}
+{#                    <input type="submit" value="Search">#}
+{#        <button class="btn btn-primary" type="submit">搜索</button>#}
+{#      </div>#}
+{#            </div>#}
+{#            <tr>#}
+{#                <td> </td>#}
+{#                <td>#}
+{##}
+{#                </td>#}
+{#            </tr>#}
+{#        </table>#}
+{##}
+{#        {% if query %}#}
+{#            <h3>Results</h3>#}
+{##}
+{#            {% for result in page.object_list %}#}
+{#                <p>#}
+{#                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>#}
+{#                </p>#}
+{#            {% empty %}#}
+{#                <p>No results found.</p>#}
+{#            {% endfor %}#}
+{##}
+{#            {% if page.has_previous or page.has_next %}#}
+{#                <div>#}
+{#                    {% if page.has_previous %}<a href="?q={{ query }}&page={{ page.previous_page_number }}">{% endif %}« Previous{% if page.has_previous %}</a>{% endif %}#}
+{#                    |#}
+{#                    {% if page.has_next %}<a href="?q={{ query }}&page={{ page.next_page_number }}">{% endif %}Next »{% if page.has_next %}</a>{% endif %}#}
+{#                </div>#}
+{#            {% endif %}#}
+{#        {% else %}#}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+{#        {% endif %}#}
+{#    </form>#}
+
+
+
+    {% csrf_token %}
+    <div class="form-group">
+        {% if errstr %}
+        <span>{{ errstr }}</span>
+        {% endif %}
+    </div>
+
+
+<br>
+
+{#<script type="text/javascript">#}
+{#function test(){#}
+{#    if ("{{server_ip_v}}" != "")#}
+{#        document.getElementById("server_ip").value=value="{{ server_ip_v }}";#}
+{#    if ("{{awards_v}}" != "")#}
+{#        document.getElementById("awards").value="{{awards_v}}";#}
+{#}#}
+{#window.onload = test;#}
+{#</script>#}
+
+{% endblock %}

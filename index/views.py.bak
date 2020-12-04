@@ -1,0 +1,385 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.shortcuts import render,render_to_response,redirect,HttpResponse
+from collections import OrderedDict
+import json
+from django.views.decorators.csrf import csrf_exempt
+import redis
+import time
+from django.contrib import messages
+from django.http import HttpResponse, HttpResponseRedirect,StreamingHttpResponse
+from  django.conf import  settings
+import  os,xlrd
+# Create your views here.
+# from  forms import  IndexModelForm
+from django.contrib.auth import  authenticate,login
+from django.contrib.auth.decorators import login_required
+
+@csrf_exempt
+def  acc_logout(req):
+    return  render(req,'includes/logout.html')
+
+
+@csrf_exempt
+def   acc_login(req):
+    if req.method == 'POST':
+        user = authenticate(username=req.POST.get('username'),
+                           password = req.POST.get('password'),)
+        print   req.POST.get('username')
+        print   req.POST.get('password')
+        if user is not None:
+            login(req,user)
+            # return HttpResponseRedirect('/search')
+            return  redirect('/search')
+        else:
+            login_err=u'您输入的用户名或者密码不正确'
+            return  render(req,'registration/login.html',{"login_err":login_err})
+    return  render(req,'registration/login.html')
+
+@csrf_exempt
+def info(req,file_name,sheet_name,row_num):
+    fpath = os.path.join(settings.MEDIA_ROOT, file_name)
+    # workbook = xlrd.open_workbook(fpath)
+    # sheet = workbook.sheet_by_name(sheet_name)
+    # li_nu = sheet.ncols
+    # row_first = sheet.row_values(0)
+    # row_val = sheet.row_values(int(row_num)-1)
+    # objs={}
+    # for i in  range(li_nu):
+    #     objs[row_first[i]] = row_val[i]
+    # # objs=excel.objects.values('li_ctx').get(sheet_name=sheet_name,row_num=row_num,excel_name_id=file_name)
+    # print str(objs).decode('utf-8')
+    # # form = IndexModelForm(instance=objs)
+    # return  render(req,'includes/info.html',{'objs':objs})
+
+    if os.path.exists(fpath):
+        workbook = xlrd.open_workbook(fpath)
+        sheet = workbook.sheet_by_name(sheet_name)
+        li_nu = sheet.ncols
+        row_first = sheet.row_values(0)
+        row_val = sheet.row_values(int(row_num)-1)
+        objs={}
+        for i in  range(li_nu):
+            objs[row_first[i]] = row_val[i]
+        # objs=excel.objects.values('li_ctx').get(sheet_name=sheet_name,row_num=row_num,excel_name_id=file_name)
+        print str(objs).decode('utf-8')
+        # form = IndexModelForm(instance=objs)
+        return  render(req,'includes/info.html',{'objs':objs})
+    else:
+        return  HttpResponse(u'对不起，这个文件不存在！')
+
+
+
+
+from  models import  all_file,excel,field
+import random,string,datetime
+@csrf_exempt
+@login_required
+def upload(request):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+    '''这个函数集中处理上传的文件'''
+    file_model = all_file
+    up_history = file_model.objects.all()
+    # up_history = ''
+
+    if request.method == 'GET':
+        return render(request, 'includes/upload.html',context={'up_history':up_history})
+
+    elif request.method == "POST":
+        objs = request.FILES.getlist('myfiles')
+        if objs:
+            # print(obj.name,obj.size)  #读取文件名称和大小，返回后台
+            for obj in objs:
+                print obj.name
+                fpath = os.path.join(settings.MEDIA_ROOT,obj.name)
+                print fpath
+                if  os.path.exists(fpath):
+                    return render(request, 'includes/upload.html', context={'up_err': u'<-  %s  ->该文件名已经存在，请更改文件名或者后台删除该文件后再进行上传'%obj.name})
+                    break
+                else:
+                    '''开始写入数据库'''
+
+                    exc = excel
+                    fd = field
+                    if file_model.objects.filter(filename=obj.name) or exc.objects.filter(excel_name_id=obj.name):
+                        return render(request, 'includes/upload.html',
+                                      context={'up_err': u'<-  %s  ->数据库内容已经存在，请更改文件名或者在后台删除该文件所有数据库记录后再进行上传' % obj.name})
+                        break
+                    else:
+                        f = open(fpath, 'wb')
+                        for chunk in obj.chunks():
+                            f.write(chunk)
+                            f.close()
+                        t1 = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+                        fn,ext = obj.name.split('.')
+                        if ext == 'xls' or ext =='xlsx':
+                            file_model.objects.create(filename=obj.name,
+                                                      category=u'2',
+                                                      content='',
+                                                      add_date=t1,
+                                                      username_id='1')
+                            workbook = xlrd.open_workbook(fpath)
+                            all_data = []
+                            if len(workbook.sheet_names()) > 0:
+                                sheet_name = workbook.sheet_names()[0]
+                                print sheet_name
+                                # # 根据sheet索引或者名称获取sheet内容
+                                sheet = workbook.sheet_by_name(sheet_name)
+                                # sheet的名称，行数，列数
+                                print sheet.name, sheet.nrows, sheet.ncols
+
+                                print  u'<<<------------------开始循环-------------->>>'
+                                li_list = sheet.row_values(0)
+                                new_list = []
+                                reload(sys)
+                                sys.setdefaultencoding('utf-8')
+                                '''读取列表数据'''
+                                for xx in li_list:
+                                    reload(sys)
+                                    sys.setdefaultencoding('utf-8')
+                                    new_list.append(str(xx).decode('utf-8'))
+                                    print xx
+                                if  fd.objects.filter(field_name=str(xx).decode('utf-8')):
+                                    pass
+                                else:
+                                    fd_val=string.join(random.sample(['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'], 6)).replace(" ","")
+                                    print 'fd_val:%s' % fd_val
+                                    fd.objects.create(field_name=str(xx).decode('utf-8'),field_val=fd_val)
+                                if sheet.ncols > 0:
+                                    for i in range(sheet.ncols):
+                                        for j in range(1, sheet.nrows):
+                                            ctx = str(sheet.col_values(i)[
+                                                                      j])  # .decode('unicode-escape','ignore')
+                                            # print ctx
+                                            # sheet_name == 'Sheet1' or sheet_name == 'Sheet2':
+                                            print ctx
+                                            print  '开始创建数据 %s' % sheet_name
+                                            t1 = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                                            if sheet.cell(j, i).ctype != 2:
+                                                # pass
+                                                exc.objects.create(sheet_name=sheet_name, excel_name_id=obj.name,
+                                                                           add_date=t1, username_id='1', li_ctx=ctx,
+                                                                           li_name=new_list[i],li_num=i+1,row_num=j)
+                                            else:
+                                                print  'ctx:%s'%type(ctx)
+                                                print    type(int(float(ctx)))
+                                                exc.objects.create(sheet_name=sheet_name, excel_name_id=obj.name,
+                                                                           add_date=t1, username_id='1', li_ctx=int(float(ctx)),
+                                                                           li_name=new_list[i],li_num=i+1,row_num=j)
+                        elif  ext == 'jpg' or ext == 'img' or ext =='jpeg' or ext == 'png':
+                            file_model.objects.create(filename=obj.name,
+                                                      category=u'3',
+                                                      # content='',
+                                                      add_date=t1,
+                                                      username_id='1')
+
+                            # file_model.objects.create()
+
+                        else:
+                            with open(fpath,'r+') as f:
+                                cont=f.read()
+                            file_model.objects.create(filename=obj.name,
+                                                      category=u'1',
+                                                      content=cont,
+                                                      add_date=t1,
+                                                      username_id='1')
+                            # file_model.objects.create()
+            return  render(request,'includes/upload.html',context={'up_status':u'成功'})
+        else:
+            return  render(request,'includes/upload.html',context={'up_err':u'您还未选择需要上传的文件，请重新操作'})
+        # models.Img.objects.create(path=file_path)
+        '''上传的时候直接回传'''
+        ret={'status':True,'path':file_path}
+        # return HttpResponse(json.dumps(ret))
+        return  render(request,'includes/upload.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@csrf_exempt
+def index(req):
+    return  render(req, 'includes/index.html')
+
+
+'''只能在这边把函数写在这边了，无法引用别的app'''
+
+
+# def readFile(filename, chunk_size=512):
+#     with open(os.path.join(settings.BASE_DIR, 'all_files', filename), 'rb') as f:
+#         print settings.BASE_DIR
+#         while True:
+#             c = f.read(chunk_size)
+#             if c:
+#                 yield c
+#             else:
+#                 break
+
+
+@csrf_exempt
+def download_file(request, fn):
+    pass
+    # do something
+
+    # the_file_name = fn  # 显示在弹出对话框中的默认的下载文件名
+    # filename = fn  # 要下载的文件路径
+    # print  fn
+    # response = StreamingHttpResponse(readFile(filename))
+    # # response['Content-File'] = fn
+    # response['Content-Type'] = 'application/octet-stream'
+    # response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+    # return response
+
+
+from  django.shortcuts import render
+from  haystack.urls import SearchView
+from  models import  field,excel
+import  sys,time
+
+# Create your views here.
+class MySeachView(SearchView):
+    # def extra_context(self):  # 重载extra_context来添加额外的context内容
+    #     # context = super(MySeachView, self).extra_context()
+    #     # request = super(MySeachView,self).request()
+    #     template = super(MySeachView,self).template()
+    #     template = 'includes/search.html'
+
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+    def create_response(self):
+        self.context = self.get_context()
+        fd = field
+        exc = excel
+        all_fields = fd.objects.values('field_name', 'field_val').distinct()
+        self.context['search_option'] = []
+        for obj in all_fields:
+            # print dict(obj)[u'field_name']
+            self.context['search_option'].append(
+                {'name': dict(obj)[u'field_name'], 'remark_name': dict(obj)[u"field_val"]})
+        # print all_fields
+        # self.context['search_option'] = [{'remark_name': '2', 'name': '3'},
+        #                                  {'remark_name': '5', 'name': '6'}]
+        # context['query'] = str(self.request.POST.get('q')) + str(self.request.POST.get('q'))
+        # print  context['query']
+        if 'search_kinds' in self.request.GET:
+            # self.context['search_val'] = self.request.GET('search_kinds')
+            '''
+            name标签
+            '''
+            print   '下拉框框里面内容: %s' % self.request.GET['search_kinds']
+            if self.request.GET['search_kinds'] !='all':
+                all_li_num = exc.objects.filter(li_name=self.request.GET['search_kinds']).values('li_num').distinct()
+                print all_li_num
+                # print self.context['page'].object_list
+                print len(self.context['page'].object_list)
+                for result in self.context['page'].object_list:
+                    print result.object.li_num
+                    for l_obj in all_li_num:
+                        print 'l_obj:%s'%l_obj
+                        for k,v in l_obj.items():
+                            print  'v:%s'%v
+                            '''数据库是字符串类型'''
+                            if result.object.li_num != str(v):
+                                # print result.object
+                                self.context['page'].object_list.remove(result)
+                    # else:
+                    #     result.object['row_ctx'] = 'ok'
+
+                print   self.context['page'].object_list
+                print len(self.context['page'].object_list)
+            else:
+                pass
+            # self.context['query'] = str(self.request.GET.get('q')) + str(self.request.GET('search_kinds'))
+            # for obj in  self.context['query']:
+            #     print obj
+            # print v
+        # time.sleep(5)
+        print '搜索框里面内容: %s' % self.context['query']
+
+        '''
+        过滤掉列数不一致的数据,事实证明是有用的
+        '''
+
+
+        return render(self.request, self.template, self.context)
+        # pass
+        # if self.request.method == 'GET':
+
+        # self.context = self.get_context()
+        # fd = field
+        # exc=excel
+        # all_fields = fd.objects.values('field_name', 'field_val').distinct()
+        # self.context['search_option'] = []
+        # for obj in all_fields:
+        #     # print dict(obj)[u'field_name']
+        #     self.context['search_option'].append({'name':dict(obj)[u'field_name'],'remark_name':dict(obj)[u"field_val"]})
+        # # print all_fields
+        # # self.context['search_option'] = [{'remark_name': '2', 'name': '3'},
+        # #                                  {'remark_name': '5', 'name': '6'}]
+        # # context['query'] = str(self.request.POST.get('q')) + str(self.request.POST.get('q'))
+        # # print  context['query']
+        # if 'search_kinds' in self.request.GET:
+        #     # self.context['search_val'] = self.request.GET('search_kinds')
+        #     '''
+        #     name标签
+        #     '''
+        #     print   '下拉框框里面内容: %s'%self.request.GET['search_kinds']
+        #     all_li_num = exc.objects.filter(li_name=self.request.GET['search_kinds']).values('li_num').distinct()
+        #     print all_li_num
+        #     # print self.context['page'].object_list
+        #     print len(self.context['page'].object_list)
+        #     for result  in  self.context['page'].object_list:
+        #         print result.object.li_num
+        #         if  result.object.li_num not in all_li_num:
+        #             # print result.object
+        #             self.context['page'].object_list.remove(result)
+        #
+        #     print   self.context['page'].object_list
+        #     print len(self.context['page'].object_list)
+        #     # self.context['query'] = str(self.request.GET.get('q')) + str(self.request.GET('search_kinds'))
+        #     # for obj in  self.context['query']:
+        #     #     print obj
+        #         # print v
+        # # time.sleep(5)
+        # print '搜索框里面内容: %s' %self.context['query']
+        #
+        # '''
+        # 过滤掉列数不一致的数据,事实证明是有用的
+        # '''
+        #
+        # # print self.context['page']
+        # return render(self.request, self.template, self.context)
+        # # elif self.request.method == 'POST':
+        # #     context = {}
+        # #     # context['search_option'] = [{'value': '1', 'remark_name': '2', 'name': '3'},
+        # #     #                             {'value': '4', 'remark_name': '5', 'name': '6'}]
+        # #     # context['query'] =  self.request.POST.get('q') + self.request.POST.get('q')
+        # # context['page'] = self.page
+        # #     return render(self.request, self.template, context)
+        # # context={}
+
+
+
+
+
+
+
+
+
+'''
+select distinct 查询字段名   from 表名;
+'''

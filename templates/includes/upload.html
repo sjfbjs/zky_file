@@ -1,0 +1,83 @@
+{% extends 'includes/demo3.html' %}
+{% load custom_tags %}
+{% block body %}
+
+
+
+
+{#    <div class="col-xs-12 col-sm-4 col-md-4">#}
+{#    <div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle">#}
+{#        <form method='POST' enctype="multipart/form-data" action='{% url 'upload' %}' >{% csrf_token %}#}
+{#        #}
+{#        <input  multiple=""  type="file"  name='myfiles'  style="position:absolute;top:0;left:0;font-size:34px; opacity:0">#}
+{#            <button class="btn btn-success fileinput-button" type="button">上传</button>#}
+{#        </form>#}
+{#    </div>#}
+{#    <span id="filename" style="vertical-align: middle">未上传文件</span>#}
+{#</div>#}
+{#<script>#}
+{#function loadFile(file){#}
+{#    $$("#filename").html(file.name);#}
+{#}#}
+{#</script>#}
+
+
+
+<div class="form-group">
+   <form method='POST' enctype="multipart/form-data" action='{% url 'upload' %}' >{% csrf_token %}
+    <table  style='margin-left:38%;'>
+       <td><input   class="btn btn-default"  type="file" name='myfiles'  multiple  ></td>
+       <td><input   class="btn btn-default"  style="color: #5b80b2 ;align-self: center" type="submit" value="上传" ></td>
+    </table>
+
+    </form>
+
+
+</div>
+    <h5 align="center " style="color: darkred">上传压缩包示例：    序列1IOZ000001.zip
+                                序列2IOZ000001.zip
+                                序列3IOZ000001.zip
+                                形态照片IOZ000001.zip，请自觉遵循命名规则进行上传文件！</h5>
+{#    {{ response_ctx }}#}
+    {% if up_status %}
+<h3 style="color: #ff3750">恭喜您上传成功！</h3>
+    {% endif %}
+<h3 style="color: red">{{ up_err }}</h3>
+
+        {%  if up_history  %}<br \>
+    <h3 align="center" style="color: darkred" >Excel上传历史记录如下：</h3>
+                        <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>文件种类</th>
+                                <th>上传者</th>
+                                <th>上传时间</th>
+                                <th>下载链接</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for  obj in up_history %}
+                            <tr>
+
+{#                               <td><a href="http://119.28.190.238:80/index/{{ result.object.sheet_name }}/{{ result.object.row_num }}">{{ result.object.excel_name_id }}</a></td>#}
+                                <td>{{ obj.filename }}</td>
+
+                                <td> {%   category obj.category %}</td>
+
+                                <td>admin</td>
+                                <td>{{ obj.add_date }}</td>
+{#                                <td><a href="http://127.0.0.1:8000/file/{{ obj.filename }}">{{ obj.filename  }}</a></td>#}
+                                <td><a href="http://{{ IP }}:{{ PORT }}/file/{{ obj.filename }}">{{ obj.filename }}</a></td>
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+
+        {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,171 @@
+
+{% extends 'includes/base.html' %}
+
+{% block body %}
+{#<h3>请搜索关键字：</h3>#}
+{#    <form class="form-inline" role="form" action="/search/" method="post">#}
+{#      <div class="form-group pull-middle">#}
+{#        <input type="text" name="keywords"   autofocus />#}
+{#        <button class="btn btn-primary" type="submit">搜索</button>#}
+{#      </div>#}
+{#    </form>#}
+{#    {% csrf_token %}#}
+{#    <div class="form-group">#}
+{#        {% if errstr %}#}
+{#        <span>{{ errstr }}</span>#}
+{#        {% endif %}#}
+{#    </div>#}
+
+<br>
+{% if objs %}
+    <h3 style="text-align: center ;color:#b31d28">该数据详细信息如下：</h3>
+{#<table class="table table-striped table-bordered">#}
+{#    <thead>#}
+    <div style="align-self: center">
+{#    <dl class="side-btn">#}
+{#        <dt>#}
+{#            <i class="fa fa-minus-square-o fa-plus-square-o"></i>#}
+{#            <a class="dt-1">个人中心</a>#}
+{#        </dt>#}
+{#    </dl>#}
+        {% for k,v in objs.items  %}
+{#    <dl style="align-self: center">#}
+        <h4 align="center"  >
+{#            <i class="aa"></i>#}
+{#            <i class=""   ></i>#}
+            <a>{{ k }}</a>
+        </h4>
+        <h5  align="center" >{{ v }}</h5>
+
+{#    </dl>#}
+    {% endfor %}
+    </div>
+    <script>
+    $("h4").click(function(){
+    $(this).nextAll("h5").addClass("aa").slideToggle("hide");
+    });
+    </script>
+
+{#    <ul>#}
+{#    {% for k,v in objs.items  %}#}
+{#        {% for key,val in obj.items %}#}
+{#      <dl class="dl-horizontal">#}
+{#        <dt>{{ k }}</dt>#}
+{#        <dd>{{ v }}</dd>#}
+{#      </dl>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#        {% for data in datas %}#}
+{#        <tr>#}
+{#            <td>{{ obj.li_ctx }}</td>#}
+{#            <td>{{ a.email }}</td>#}
+{#            <td>{{ a.add_date }}</td>#}
+{#            <td>{{ a.username }}</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </tbody>#}
+</table>
+{#    {{ info_form }}#}
+{% endif %}
+
+
+
+
+{#<script type="text/javascript">#}
+{#function test(){#}
+{#    if ("{{server_ip_v}}" != "")#}
+{#        document.getElementById("server_ip").value=value="{{ server_ip_v }}";#}
+{#    if ("{{awards_v}}" != "")#}
+{#        document.getElementById("awards").value="{{awards_v}}";#}
+{#}#}
+{#window.onload = test;#}
+{#</script>#}
+
+{% endblock %}
+
+
+
+{#{% extends 'includes/demo3.html' %}#}
+{##}
+{#{% block body %}#}
+{#<h3>请搜索关键字：</h3>#}
+{#    <form class="form-inline" role="form" action="/search/" method="post">#}
+{#      <div class="form-group pull-middle">#}
+{#        <input type="text" name="keywords"   autofocus />#}
+{#        <button class="btn btn-primary" type="submit">搜索</button>#}
+{#      </div>#}
+{#    </form>#}
+{#    {% csrf_token %}#}
+{#    <div class="form-group">#}
+{#        {% if errstr %}#}
+{#        <span>{{ errstr }}</span>#}
+{#        {% endif %}#}
+{#    </div>#}
+{##}
+{#<br>#}
+{#{% if objs %}#}
+{#    <h3 style="text-align: center ;color:#b31d28">该数据详细信息如下：</h3>#}
+{#<table class="table table-striped table-bordered">#}
+{#    <thead>#}
+{#    <ul  style="text-algin:center">#}
+{#    <div style="overflow:auto; width:2000px;">#}
+{#    <table       border="4"   style="color: #25010e">#}
+{#        <thead>#}
+{#    <tr>#}
+{#    {% for k,v in objs.items  %}#}
+{#        {% for key,val in obj.items%}#}
+{#      <dl  >#}
+{#          <dt style="text-align: center;">{{ k }}:<p style="color: #0e90d2;">{{ v }}</p></dt>#}
+{#        <dd style="text-algin:center"><p style="text-align: center">{{ v }}</p></dd>#}
+{#      </dl>#}
+{#        <th style="text-align:center; vertical-align:middle; ">{{ k }}</th>#}
+{#    {% endfor %}#}
+{#    {% for k,v in objs.items %}#}
+{#        <td>{{ v }}</td>#}
+{#    {% endfor %}#}
+{#    </tr>#}
+{#        </thead>#}
+{#    <tbody>#}
+{#    {% for k,v in objs.items  %}#}
+{#        {% for key,val in obj.items%}#}
+{#      <dl  >#}
+{#          <dt style="text-align: center;">{{ k }}:<p style="color: #0e90d2;">{{ v }}</p></dt>#}
+{#        <dd style="text-algin:center"><p style="text-align: center">{{ v }}</p></dd>#}
+{#      </dl>#}
+{#        <td>{{ v }}</td>#}
+{#    {% endfor %}#}
+{#    </tbody>#}
+{#    </table>#}
+{#    </div>#}
+{#    </ul>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#        {% for data in datas %}#}
+{#        <tr>#}
+{#            <td>{{ obj.li_ctx }}</td>#}
+{#            <td>{{ a.email }}</td>#}
+{#            <td>{{ a.add_date }}</td>#}
+{#            <td>{{ a.username }}</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </tbody>#}
+{#</table>#}
+{#    {{ info_form }}#}
+{#{% endif %}#}
+{##}
+{##}
+{##}
+{##}
+{#<script type="text/javascript">#}
+{#function test(){#}
+{#    if ("{{server_ip_v}}" != "")#}
+{#        document.getElementById("server_ip").value=value="{{ server_ip_v }}";#}
+{#    if ("{{awards_v}}" != "")#}
+{#        document.getElementById("awards").value="{{awards_v}}";#}
+{#}#}
+{#window.onload = test;#}
+{#</script>#}
+{##}
+{#{% endblock %}#}
