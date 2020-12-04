@@ -29,5 +29,6 @@ def send_verification_email(user_id):
 
 """
 @app.task
-def  write_to_es():
+def  write_to_es(fpath):
+
     pass
