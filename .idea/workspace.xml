@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a4b80ba0-c0af-4fcf-bcdb-d9f022ed024e" name="Default" comment="test">
-      <change beforePath="$PROJECT_DIR$/index/esviews.py" beforeDir="false" afterPath="$PROJECT_DIR$/index/esviews.py" afterDir="false" />
-    </list>
+    <list default="true" id="a4b80ba0-c0af-4fcf-bcdb-d9f022ed024e" name="Default" comment="test" />
     <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

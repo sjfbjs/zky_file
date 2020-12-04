@@ -36,6 +36,8 @@ def   acc_login(req):
 
 
 
+
+
         if user is not None:
             login(req,user)
             # return HttpResponseRedirect('/search')
