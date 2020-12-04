@@ -23,6 +23,11 @@ def send_verification_email(user_id):
         )
     except UserModel.DoesNotExist:
         logging.warning("Tried to send verification email to non-existing user '%s'" % user_id)
+"""
+    
+    写入es的任务
+
+"""
 @app.task
 def  write_to_es():
     pass
