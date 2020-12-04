@@ -33,8 +33,7 @@ def   acc_login(req):
         print  "acc_login"
         user = authenticate(username=req.POST.get('username'),
                            password = req.POST.get('password'),)
-        print   req.POST.get('username')
-        print   req.POST.get('password')
+
         if user is not None:
             login(req,user)
             # return HttpResponseRedirect('/search')
