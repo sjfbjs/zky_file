@@ -2,7 +2,6 @@
 __author__ = 'sjf'
 import os
 from celery import Celery
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'zky_file.settings')
 
 app = Celery('zky_file')

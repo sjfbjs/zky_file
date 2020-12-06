@@ -65,7 +65,7 @@ def info(req,file_name,sheet_name,row_num):
 
 
 
-
+from tasks import  EsImportFromFile,Test
 from  models import  all_file,excel,field
 import random,string,datetime
 @csrf_exempt
@@ -117,7 +117,7 @@ def upload(request):
 
                 else:
                     '''开始写入数据库'''
-
+                    Test.apply_async(args=(fpath,), queue='work_queue')
                     exc = excel
                     fd = field
                     if file_model.objects.filter(filename=obj.name) or exc.objects.filter(excel_name_id=obj.name):
